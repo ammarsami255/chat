@@ -110,11 +110,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
       setState(() => _isVerifying = false);
 
       if (result.failure == null && result.isVerified) {
-        // Navigate to main screen on success
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-          (route) => false,
-        );
+        // Pop back to refresh the previous screen's state
+        Navigator.of(context).pop();
       } else {
         // Verification not complete yet
         if (!mounted) return;
@@ -143,10 +140,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen>
   Future<void> _logout() async {
     await getIt<AuthRepository>().signOut();
     if (!mounted) return;
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
-      (route) => false,
-    );
+    // Pop back to return to the previous screen (HomeScreen will re-check auth and redirect)
+    Navigator.of(context).pop();
   }
 
   @override

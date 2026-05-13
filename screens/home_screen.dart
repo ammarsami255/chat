@@ -28,6 +28,24 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _unreadChatsStream = getIt<ChatRepository>().getUnreadChatsCountStream();
     _initialize();
+    _checkVerificationOnInit();
+  }
+
+  /// Check verification status on app start
+  Future<void> _checkVerificationOnInit() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && !user.emailVerified && mounted) {
+      final email = user.email;
+      if (email != null && email.isNotEmpty) {
+        // Auto-navigate to verification screen for unverified users
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpVerificationScreen(email: email),
+          ),
+        );
+      }
+    }
   }
 
   @override
