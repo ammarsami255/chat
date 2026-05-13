@@ -68,14 +68,7 @@ class AuthWrapper extends StatelessWidget {
         if (state is AuthLoading || state is AuthInitial) {
           return const SplashScreen();
         }
-        
-        if (state is AuthAuthenticated) {
-          // Navigate to existing home screen
-          return const HomeScreen();
-        }
-        
-        // Unauthenticated - show login
-        return const LoginScreen();
+        return const HomeScreen();
       },
     );
   }

@@ -689,19 +689,11 @@ class _MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildSeenIcon(bool seen) {
-    if (seen) {
-      return const Icon(
-        Icons.done_all_rounded,
-        size: 14,
-        color: Colors.lightBlueAccent,
-      );
+  Widget _buildSeenIcon(bool isSeen) {
+    if (isSeen) {
+      return const Icon(Icons.done_all_rounded, size: 14, color: Colors.lightBlueAccent);
     } else {
-      return const Icon(
-        Icons.done_all_rounded,
-        size: 14,
-        color: Colors.white70,
-      );
+      return const Icon(Icons.done_rounded, size: 14, color: Colors.white70);
     }
   }
 }

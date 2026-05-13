@@ -10,7 +10,9 @@ class TimeUtils {
     if (diff.inMinutes < 1) return 'الآن';
     if (diff.inHours < 1) return '${diff.inMinutes}د';
     if (diff.inHours < 24 && timestamp.day == now.day) {
-      return DateFormat('hh:mm a').format(timestamp);
+      final h = DateFormat('hh:mm').format(timestamp);
+      final period = timestamp.hour < 12 ? 'ص' : 'م';
+      return '$h $period';
     }
     if (diff.inDays < 7) {
       // Show day name in Arabic if possible, or just days
@@ -22,7 +24,9 @@ class TimeUtils {
   /// Format timestamp for message bubble
   static String formatMessageTime(DateTime? timestamp) {
     if (timestamp == null) return '';
-    return DateFormat('hh:mm a').format(timestamp);
+    final h = DateFormat('hh:mm').format(timestamp);
+    final period = timestamp.hour < 12 ? 'ص' : 'م';
+    return '$h $period';
   }
 
   /// Get last seen text
