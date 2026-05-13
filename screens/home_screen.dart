@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:el_moza3/infrastructure/di/injection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:el_moza3/features/chat/domain/repositories/chat_repository.dart';
+import 'package:el_moza3/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:el_moza3/features/auth/presentation/bloc/auth_state_event.dart';
 import 'package:el_moza3/screens/services_screen.dart';
 import 'package:el_moza3/screens/search_screen.dart';
 import 'package:el_moza3/screens/add_service_screen.dart';
@@ -89,7 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const AuthBottomSheet(),
+      builder: (context) => BlocProvider.value(
+        value: BlocProvider.of<AuthBloc>(this.context),
+        child: const AuthBottomSheet(),
+      ),
     );
   }
 
@@ -407,8 +412,7 @@ class AuthBottomSheet extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: () async {
           Navigator.pop(context);
-          // Assuming AuthRepository is available via getIt
-          // This matches existing patterns in the file
+          context.read<AuthBloc>().add(AuthSignInWithGoogleRequested());
         },
         icon: const Icon(Icons.g_mobiledata, size: 24),
         label: const Text('Continue with Google'),

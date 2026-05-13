@@ -53,10 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthError) {
+        if (state is AuthAuthenticated) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (_) => false);
+        } else if (state is AuthError) {
           _showError(state.message);
         }
-        setState(() => _loading = false);
+        if (state is! AuthLoading) {
+          setState(() => _loading = false);
+        }
       },
       child: Scaffold(
         backgroundColor: AppColors.background2,
@@ -138,7 +142,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
-                    // TODO: Password reset
+                    final email = _emailCtrl.text.trim();
+                    if (email.isEmpty) {
+                      _showError('أدخل بريدك الإلكتروني أولاً');
+                      return;
+                    }
+                    context.read<AuthBloc>().add(AuthResetPasswordRequested(email));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('تم إرسال رابط إعادة تعيين كلمة المرور')),
+                    );
                   },
                   child: const Text(
                     'هل نسيت كلمة المرور؟',

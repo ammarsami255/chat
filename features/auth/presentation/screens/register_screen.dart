@@ -65,10 +65,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthError) {
+        if (state is AuthAuthenticated) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (_) => false);
+        } else if (state is AuthError) {
           _showError(state.message);
           setState(() => _loading = false);
-        } else if (state is AuthAuthenticated || state is AuthUnauthenticated) {
+        }
+        if (state is! AuthLoading) {
           setState(() => _loading = false);
         }
       },
