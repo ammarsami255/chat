@@ -68,6 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (state is AuthError) {
           _showError(state.message);
           setState(() => _loading = false);
+        } else if (state is AuthAuthenticated || state is AuthUnauthenticated) {
+          setState(() => _loading = false);
         }
       },
       child: Scaffold(

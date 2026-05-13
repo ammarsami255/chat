@@ -22,15 +22,17 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Listen to auth state changes to properly initialize stream
+    final user = FirebaseAuth.instance.currentUser;
+    _chatsStream = user != null
+        ? getIt<ChatRepository>().getMyChats(limit: 20)
+        : Stream.value([]);
+
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (mounted) {
         setState(() {
-          if (user != null) {
-            _chatsStream = getIt<ChatRepository>().getMyChats(limit: 20);
-          } else {
-            _chatsStream = Stream.value([]);
-          }
+          _chatsStream = user != null
+              ? getIt<ChatRepository>().getMyChats(limit: 20)
+              : Stream.value([]);
         });
       }
     });

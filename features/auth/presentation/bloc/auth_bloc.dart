@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:el_moza3/infrastructure/di/injection.dart';
 
+import '../../../../core/errors/failures.dart';
 import '../../domain/entities/auth_user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/auth_usecases.dart';
@@ -74,7 +75,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     if (result.failure != null) {
-      emit(AuthError(result.failure!.message));
+      if (result.failure is EmailVerificationFailure) {
+        emit(AuthAuthenticated(user: result.user, needsVerification: true));
+      } else {
+        emit(AuthError(result.failure!.message));
+      }
       return;
     }
 
